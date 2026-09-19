@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>SentinelTrap | Security Operations Dashboard</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+
+<div class="app">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+
+        <div class="brand">
+            <div class="brand-icon">🛡</div>
+
+            <div>
+                <h1>SentinelTrap</h1>
+                <span>Security Monitor</span>
+            </div>
+        </div>
+
+        <nav class="navigation">
+
+            <a href="#overview" class="nav-item active">
+                <span>◉</span>
+                Overview
+            </a>
+
+            <a href="#events" class="nav-item">
+                <span>◌</span>
+                Login Events
+            </a>
+
+            <a href="#alerts" class="nav-item">
+                <span>⚠</span>
+                Security Alerts
+            </a>
+
+            <a href="#intelligence" class="nav-item">
+                <span>⌁</span>
+                IP Intelligence
+            </a>
+
+        </nav>
+
+        <div class="sidebar-footer">
+            <div class="system-status">
+                <span class="status-dot"></span>
+                System Monitoring
+            </div>
+
+            <small>SentinelTrap v1.0</small>
+        </div>
+
+    </aside>
+
+
+    <!-- MAIN -->
+    <main class="main-content">
+
+        <!-- TOP BAR -->
+        <header class="topbar">
+
+            <div>
+                <h2>Security Operations Center</h2>
+                <p>Real-time honeypot monitoring and threat analysis</p>
+            </div>
+
+            <div class="topbar-right">
+
+                <div class="api-status" id="apiStatus">
+                    <span class="status-dot"></span>
+                    API Connected
+                </div>
+
+                <div class="last-updated">
+                    Updated:
+                    <span id="lastUpdated">--</span>
+                </div>
+
+            </div>
+
+        </header>
+
+
+        <!-- OVERVIEW -->
+        <section id="overview">
+
+            <div class="section-heading">
+                <div>
+                    <h3>Security Overview</h3>
+                    <p>Current system activity and threat posture</p>
+                </div>
+            </div>
+
+
+            <!-- METRICS -->
+            <div class="metrics-grid">
+
+                <div class="metric-card">
+                    <div class="metric-icon">◉</div>
+
+                    <div>
+                        <span class="metric-label">
+                            Total Attempts
+                        </span>
+
+                        <strong id="totalAttempts">
+                            0
+                        </strong>
+                    </div>
+                </div>
+
+
+                <div class="metric-card danger">
+                    <div class="metric-icon">⚠</div>
+
+                    <div>
+                        <span class="metric-label">
+                            Failed Logins
+                        </span>
+
+                        <strong id="failedLogins">
+                            0
+                        </strong>
+                    </div>
+                </div>
+
+
+                <div class="metric-card success">
+                    <div class="metric-icon">✓</div>
+
+                    <div>
+                        <span class="metric-label">
+                            Successful Logins
+                        </span>
+
+                        <strong id="successfulLogins">
+                            0
+                        </strong>
+                    </div>
+                </div>
+
+
+                <div class="metric-card warning">
+                    <div class="metric-icon">!</div>
+
+                    <div>
+                        <span class="metric-label">
+                            Active Alerts
+                        </span>
+
+                        <strong id="activeAlerts">
+                            0
+                        </strong>
+                    </div>
+                </div>
+
+            </div>
+
+
+            <!-- CHARTS -->
+            <div class="charts-grid">
+
+                <div class="panel">
+
+                    <div class="panel-header">
+                        <div>
+                            <h3>Login Activity</h3>
+                            <span>Authentication events</span>
+                        </div>
+                    </div>
+
+                    <div class="chart-container">
+                        <canvas id="loginActivityChart"></canvas>
+                    </div>
+
+                </div>
+
+
+                <div class="panel">
+
+                    <div class="panel-header">
+                        <div>
+                            <h3>Threat Severity</h3>
+                            <span>Alert distribution</span>
+                        </div>
+                    </div>
+
+                    <div class="chart-container">
+                        <canvas id="threatSeverityChart"></canvas>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- LOGIN EVENTS -->
+        <section id="events" class="dashboard-section">
+
+            <div class="section-heading">
+
+                <div>
+                    <h3>Recent Login Activity</h3>
+                    <p>Authentication events captured by the honeypot</p>
+                </div>
+
+                <div class="section-badge">
+                    LIVE DATA
+                </div>
+
+            </div>
+
+
+            <div class="panel">
+
+                <div class="table-wrapper">
+
+                    <table>
+
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Username</th>
+                                <th>Source IP</th>
+                                <th>Timestamp</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+
+                        <tbody id="loginEventsTable">
+
+                            <tr>
+                                <td colspan="5">
+                                    Loading events...
+                                </td>
+                            </tr>
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- SECURITY ALERTS -->
+        <section id="alerts" class="dashboard-section">
+
+            <div class="section-heading">
+
+                <div>
+                    <h3>Security Alerts</h3>
+                    <p>Threats detected by the analysis engine</p>
+                </div>
+
+                <div class="section-badge alert-badge">
+                    THREAT MONITOR
+                </div>
+
+            </div>
+
+
+            <div id="alertsContainer">
+
+                <div class="empty-state">
+                    No security alerts detected.
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- IP INTELLIGENCE -->
+        <section id="intelligence" class="dashboard-section">
+
+            <div class="section-heading">
+
+                <div>
+                    <h3>IP Intelligence</h3>
+                    <p>Source-based authentication activity analysis</p>
+                </div>
+
+            </div>
+
+
+            <div class="panel">
+
+                <div class="table-wrapper">
+
+                    <table>
+
+                        <thead>
+
+                            <tr>
+                                <th>Source IP</th>
+                                <th>Total</th>
+                                <th>Failed</th>
+                                <th>Successful</th>
+                                <th>Unique Users</th>
+                                <th>Failure Rate</th>
+                            </tr>
+
+                        </thead>
+
+                        <tbody id="ipIntelligenceTable">
+
+                            <tr>
+                                <td colspan="6">
+                                    Loading IP intelligence...
+                                </td>
+                            </tr>
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- FOOTER -->
+        <footer>
+
+            <div>
+                SentinelTrap — Linux-Based Cybersecurity Honeypot
+            </div>
+
+            <div>
+                Controlled Local Security Simulation
+            </div>
+
+        </footer>
+
+    </main>
+
+</div>
+
+
+<script src="app.js"></script>
+
+</body>
+</html>
